@@ -6,11 +6,9 @@ on:
     - cron: '0 6 * * MON'
   # Manual trigger for re-publishing on demand.
   workflow_dispatch:
-  # Build (no push) on PRs and pushes to main, so contributors get the
-  # smoke-test verdict before merge and main always reflects a buildable state.
+  # Build (no push) on PRs so contributors get the smoke-test verdict
+  # before merge.
   pull_request:
-  push:
-    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

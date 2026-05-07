@@ -43,4 +43,4 @@ Rebuilt weekly (Monday 06:00 UTC) so each image picks up its upstream base's sec
 
 1. Add a directory `<name>/` at the repo root with `Dockerfile` and `README.md`.
 2. Add a matrix entry in `.github/workflows/build.yml` (both the `build` and `manifest` jobs).
-3. Open a PR. CI builds and smoke-tests every image on every PR; pushes to GHCR only happen on `main` and on the weekly rebuild.
+3. Open a PR. CI builds and smoke-tests every image on every PR; pushes to GHCR only happen on the weekly rebuild.
