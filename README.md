@@ -1,6 +1,8 @@
 # Guest images
 
-Base images we publish for use as the *guest* rootfs inside [microsandbox](https://github.com/superradcompany/microsandbox) microVMs. Each image ships a real init binary so `--init auto` (or an explicit `--init <path>`) works out of the box.
+A small collection of optional base images that bundle a real init system (systemd, OpenRC) for use with [microsandbox](https://github.com/superradcompany/microsandbox).
+
+You don't need these to run microsandbox. Its default agent-as-PID-1 is enough for one-shot processes and most workloads. Reach for these when you specifically need `systemctl`, `loginctl`, dbus, or a workload that ships only as a `.deb` / `.rpm` with a service unit.
 
 | Image | Base | Init | Primary tag | Pull |
 |-------|------|------|-------------|------|
@@ -35,15 +37,10 @@ For reproducible builds, prefer a dated tag or a digest (`@sha256:…`).
 
 ## Rebuild cadence
 
-Two triggers:
-
-- **Weekly cron** (Monday 06:00 UTC): picks up upstream base-image security patches without us having to do anything.
-- **Manual** via the `Build` workflow's `workflow_dispatch`.
-
-The same Dockerfiles drive both. Every rebuild is gated by a smoke test that runs the produced image and verifies an init binary exists at one of the paths `--init auto` checks; failed rebuilds leave the previous `:latest` digest in place rather than poisoning the tag.
+Rebuilt weekly (Monday 06:00 UTC) so each image picks up its upstream base's security patches without us having to do anything. The same Dockerfiles drive every rebuild, and each rebuild is gated by a smoke test that runs the produced image and verifies an init binary exists at one of the paths `--init auto` checks. Failed rebuilds leave the previous `:latest` digest in place rather than poisoning the tag.
 
 ## Adding a new image
 
 1. Add a directory `<name>/` at the repo root with `Dockerfile` and `README.md`.
 2. Add a matrix entry in `.github/workflows/build.yml` (both the `build` and `manifest` jobs).
-3. Open a PR. CI builds and smoke-tests every image on every PR; pushes to GHCR only happen on `main`, cron, or manual dispatch.
+3. Open a PR. CI builds and smoke-tests every image on every PR; pushes to GHCR only happen on `main` and on the weekly rebuild.
